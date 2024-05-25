@@ -1,6 +1,8 @@
 """This is where the forwards and backwards passes live."""
 import math
 from typing import Tuple, Optional
+
+from tinygrad.function import range_reduction
 from tinygrad.helpers import argsort
 from tinygrad.dtype import dtypes, DType, sum_acc_dtype
 from tinygrad.ops import UnaryOps, BinaryOps, TernaryOps, ReduceOps
@@ -39,10 +41,18 @@ class Reciprocal(Function):
 class Sin(Function):
   def forward(self, x:LazyBuffer) -> LazyBuffer:
     self.x = x
-    return x.e(UnaryOps.SIN)
+    return Sin.sin(x)
 
   def backward(self, grad_output:LazyBuffer) -> LazyBuffer:
-    return self.x.const(math.pi / 2).e(BinaryOps.SUB, self.x).e(UnaryOps.SIN).e(BinaryOps.MUL, grad_output)
+    return Sin.sin(self.x.const(math.pi / 2).e(BinaryOps.SUB, self.x)).e(BinaryOps.MUL, grad_output)
+
+  @staticmethod
+  def sin(x: LazyBuffer) -> LazyBuffer:
+    orig_dtype = x.dtype
+    x = x.cast(dtypes.float64)
+    x_reduced = range_reduction.range_reduction(x, range_reduction.PI_OVER_TWO_RANGE_REDUCTION_CONSTANTS)
+
+    return x_reduced.cast(orig_dtype)
 
 # NOTE: maximum(x, 0) behaves differently where x=0
 class Relu(Function):

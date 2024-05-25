@@ -1,7 +1,8 @@
 import ctypes, struct, os, functools
 from typing import Union
 from dataclasses import dataclass
-from tinygrad.helpers import round_up, to_mv
+from tinygrad.helpers import round_up
+
 
 class VirtFileDesc:
   def __init__(self, fd): self.fd, self.off = fd, 0

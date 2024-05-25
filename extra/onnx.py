@@ -29,7 +29,7 @@ def to_python_const(t, tobytes=False) -> Union[List[ConstType], List[bytes], Uni
     cache_misses = info.misses
   return ret
 
-# copied from helpers.py
+# copied from __init__.py
 def is_dtype_supported(dtype, device: str = Device.DEFAULT):
   if dtype == dtypes.bfloat16: return False
   if device in ["WEBGPU", "WEBGL"]: return dtype in [dtypes.float, dtypes.int32, dtypes.uint32]

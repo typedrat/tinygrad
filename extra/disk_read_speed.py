@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, ctypes, ctypes.util, io, mmap
+import os, ctypes.util, mmap
 from tinygrad import Tensor, dtypes, Device
 from tinygrad.helpers import Timing, from_mv
 libc = ctypes.CDLL(ctypes.util.find_library("c"))
@@ -74,8 +74,6 @@ def read_to_gpu_pingpong(fd, sz, gpubuf):
 
 MAP_LOCKED = 0x2000
 MAP_HUGETLB = 0x40000
-
-from tinygrad.runtime.ops_hip import HIPDevice
 
 if __name__ == "__main__":
   dev = Device["HIP"]

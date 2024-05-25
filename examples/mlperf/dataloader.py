@@ -7,7 +7,8 @@ from tqdm import tqdm
 from tinygrad import dtypes, Tensor
 from tinygrad.helpers import getenv, prod, Context, round_up
 from collections import deque
-from multiprocessing import Queue, Process, shared_memory, connection, Lock, cpu_count, Pool
+from multiprocessing import Queue, Process, shared_memory, connection, Lock, cpu_count
+
 
 class MyQueue:
   def __init__(self, multiple_readers=True, multiple_writers=True):
