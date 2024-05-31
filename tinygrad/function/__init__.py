@@ -2,9 +2,9 @@
 import math
 from typing import Tuple, Optional
 
-from tinygrad.function import range_reduction
 from tinygrad.helpers import argsort
 from tinygrad.dtype import dtypes, DType, sum_acc_dtype
+from tinygrad.function.trig_approx import Sin as Sin
 from tinygrad.ops import UnaryOps, BinaryOps, TernaryOps, ReduceOps
 from tinygrad.tensor import Function
 from tinygrad.lazy import LazyBuffer
@@ -37,22 +37,6 @@ class Reciprocal(Function):
     return self.ret
   def backward(self, grad_output:LazyBuffer) -> LazyBuffer:
     return grad_output.e(UnaryOps.NEG).e(BinaryOps.MUL, self.ret).e(BinaryOps.MUL, self.ret)
-
-class Sin(Function):
-  def forward(self, x:LazyBuffer) -> LazyBuffer:
-    self.x = x
-    return Sin.sin(x)
-
-  def backward(self, grad_output:LazyBuffer) -> LazyBuffer:
-    return Sin.sin(self.x.const(math.pi / 2).e(BinaryOps.SUB, self.x)).e(BinaryOps.MUL, grad_output)
-
-  @staticmethod
-  def sin(x: LazyBuffer) -> LazyBuffer:
-    orig_dtype = x.dtype
-    x = x.cast(dtypes.float64)
-    x_reduced = range_reduction.range_reduction(x, range_reduction.PI_OVER_TWO_RANGE_REDUCTION_CONSTANTS)
-
-    return x_reduced.cast(orig_dtype)
 
 # NOTE: maximum(x, 0) behaves differently where x=0
 class Relu(Function):
