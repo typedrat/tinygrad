@@ -24,6 +24,8 @@ def create_lazybuffer(device:str, st:ShapeTracker, dtype:DType, op:Optional[Op]=
 
 view_supported_devices = {"LLVM", "CLANG", "CUDA", "DISK"}
 class LazyBuffer:
+  shape: Tuple[sint | ...]
+
   def __init__(self, device:str, st:ShapeTracker, dtype:DType,
                op:Optional[Op]=None, arg:Any=None, srcs:Tuple[LazyBuffer, ...]=(),
                base:Optional[LazyBuffer]=None):
